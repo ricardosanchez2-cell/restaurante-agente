@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -18,9 +18,18 @@ export function ServiceSelection({ customerName, onSelect, onBack }: ServiceSele
   const [tableNumber, setTableNumber] = useState('')
   const [guestCount, setGuestCount] = useState('')
 
+  useEffect(() => {
+    const guests = parseInt(guestCount)
+    if (!Number.isNaN(guests) && guests > 0) {
+      setTableNumber(String(Math.min(20, Math.max(1, guests))))
+    } else {
+      setTableNumber('')
+    }
+  }, [guestCount])
+
   const handleContinue = () => {
     if (selectedMode === 'dine-in' || selectedMode === 'preorder') {
-      if (tableNumber && guestCount) {
+      if (guestCount) {
         onSelect(selectedMode, tableNumber, parseInt(guestCount))
       }
     } else if (selectedMode) {
@@ -115,29 +124,23 @@ export function ServiceSelection({ customerName, onSelect, onBack }: ServiceSele
         {(selectedMode === 'dine-in' || selectedMode === 'preorder') && (
           <div className="space-y-4 p-5 bg-card border border-border rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
             <h3 className="font-semibold text-foreground">Table Details</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Table Number</label>
-                <Input
-                  type="text"
-                  placeholder="e.g., 5"
-                  value={tableNumber}
-                  onChange={(e) => setTableNumber(e.target.value)}
-                  className="h-12 bg-background"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">Number of Guests</label>
-                <Input
-                  type="number"
-                  placeholder="e.g., 2"
-                  min="1"
-                  value={guestCount}
-                  onChange={(e) => setGuestCount(e.target.value)}
-                  className="h-12 bg-background"
-                />
-              </div>
+            <div className="space-y-2">
+              <label className="text-sm text-muted-foreground">Number of Guests</label>
+              <Input
+                type="number"
+                placeholder="e.g., 2"
+                min="1"
+                value={guestCount}
+                onChange={(e) => setGuestCount(e.target.value)}
+                className="h-12 bg-background"
+              />
             </div>
+            {tableNumber && (
+              <div className="rounded-xl border border-border p-4 bg-secondary/50">
+                <p className="text-sm text-muted-foreground">Assigned table</p>
+                <p className="text-lg font-semibold">Table {tableNumber}</p>
+              </div>
+            )}
           </div>
         )}
 
