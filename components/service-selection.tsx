@@ -19,7 +19,7 @@ export function ServiceSelection({ customerName, onSelect, onBack }: ServiceSele
   const [guestCount, setGuestCount] = useState('')
 
   const handleContinue = () => {
-    if (selectedMode === 'dine-in') {
+    if (selectedMode === 'dine-in' || selectedMode === 'preorder') {
       if (tableNumber && guestCount) {
         onSelect(selectedMode, tableNumber, parseInt(guestCount))
       }
@@ -112,7 +112,7 @@ export function ServiceSelection({ customerName, onSelect, onBack }: ServiceSele
           })}
         </div>
 
-        {selectedMode === 'dine-in' && (
+        {(selectedMode === 'dine-in' || selectedMode === 'preorder') && (
           <div className="space-y-4 p-5 bg-card border border-border rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
             <h3 className="font-semibold text-foreground">Table Details</h3>
             <div className="grid grid-cols-2 gap-4">
