@@ -21,7 +21,8 @@ export function ServiceSelection({ customerName, onSelect, onBack }: ServiceSele
   useEffect(() => {
     const guests = parseInt(guestCount)
     if (!Number.isNaN(guests) && guests > 0) {
-      setTableNumber(String(Math.min(20, Math.max(1, guests))))
+      const assignedTable = ((guests - 1) % 20) + 1
+      setTableNumber(String(assignedTable))
     } else {
       setTableNumber('')
     }
@@ -148,7 +149,7 @@ export function ServiceSelection({ customerName, onSelect, onBack }: ServiceSele
           onClick={handleContinue}
           disabled={
             !selectedMode ||
-            (selectedMode === 'dine-in' && (!tableNumber || !guestCount))
+            ((selectedMode === 'dine-in' || selectedMode === 'preorder') && !guestCount)
           }
           className="w-full h-14 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl disabled:opacity-50"
         >
